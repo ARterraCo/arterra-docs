@@ -6,17 +6,21 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'ARterra Labs',
+  tagline: 'ARterra Labs',
   url: 'https://arterraco.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo.png',
   organizationName: 'ARterraCo', // Usually your GitHub org/user name.
   projectName: 'arterraco.github.io', // Usually your repo name.
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en'],
+  },
 
   presets: [
     [
@@ -45,10 +49,10 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: 'ARterra Labs',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'ARterra Labs Logo',
+          src: 'img/logo.png',
         },
         items: [
           {
@@ -57,12 +61,14 @@ const config = {
             position: 'left',
             label: 'Tutorial',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
+          { to: '/blog', label: 'Blog', position: 'left' },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/ARterraCo/arterraco.github.io',
             label: 'GitHub',
             position: 'right',
           },
+          { type: 'docsVersionDropdown', position: 'right' },
+          { type: 'localeDropdown', position: 'right' },
         ],
       },
       footer: {
@@ -103,7 +109,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/ARterraCo/arterraco.github.io',
               },
             ],
           },

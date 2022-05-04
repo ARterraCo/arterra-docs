@@ -1,6 +1,6 @@
 ---
 slug: long-blog-post
-title: Long Blog Post
+title: Example Long Blog Post
 authors: endi
 tags: [hello, docusaurus]
 ---

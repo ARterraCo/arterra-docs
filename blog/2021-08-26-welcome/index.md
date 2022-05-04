@@ -1,6 +1,6 @@
 ---
 slug: welcome
-title: Welcome
+title: Example Welcome
 authors: [slorber, yangshun]
 tags: [facebook, hello, docusaurus]
 ---
