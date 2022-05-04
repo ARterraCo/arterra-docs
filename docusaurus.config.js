@@ -1,8 +1,8 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const lightCodeTheme = require('prism-react-renderer/themes/github');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -29,14 +29,14 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/ARterraCo/arterraco.github.io/tree/main/',
+          editUrl: 'https://github.com/ARterraCo/arterraco.github.io/tree/dev/',
           versions: {
             current: { label: `v0.0.23-v0.0.19` },
           },
         },
         blog: {
           showReadingTime: true,
-          editUrl: 'https://github.com/ARterraCo/arterraco.github.io/tree/main/',
+          editUrl: 'https://github.com/ARterraCo/arterraco.github.io/tree/dev/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -48,6 +48,10 @@ const config = {
   themeConfig:
   /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      colorMode: {
+        defaultMode: 'dark',
+        // respectPrefersColorScheme: true,
+      },
       navbar: {
         title: 'ARterra Labs',
         logo: { alt: 'ARterra Labs Logo', src: 'img/logo.png' },
@@ -93,8 +97,8 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} ARterra Labs, Inc. Built with Docusaurus.`,
       },
       prism: {
-        theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+        theme: lightCodeTheme,
       },
     }),
 };
