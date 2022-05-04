@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'ARterra Labs',
-  tagline: 'ARterra Labs',
+  tagline: 'Start Collecting ESports and Gaming Digital Collectibles',
   url: 'https://docs.arterra.co',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -29,14 +29,14 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          editUrl: 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/ARterraCo/arterraco.github.io/tree/main/',
+          versions: {
+            current: { label: `v0.0.23-v0.0.19` },
+          },
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/ARterraCo/arterraco.github.io/tree/main/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -46,29 +46,24 @@ const config = {
   ],
 
   themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+  /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
         title: 'ARterra Labs',
-        logo: {
-          alt: 'ARterra Labs Logo',
-          src: 'img/logo.png',
-        },
+        logo: { alt: 'ARterra Labs Logo', src: 'img/logo.png' },
         items: [
-          {
-            type: 'doc',
-            docId: 'intro',
-            position: 'left',
-            label: 'Tutorial',
-          },
-          { to: '/blog', label: 'Blog', position: 'left' },
-          {
-            href: 'https://github.com/ARterraCo/arterraco.github.io',
-            label: 'GitHub',
-            position: 'right',
-          },
+          // left
+          { label: 'Tutorial', type: 'doc', docId: 'intro', position: 'left' },
+          { to: '/blog', label: 'Example Blog', position: 'left' },
+          // right
           { type: 'docsVersionDropdown', position: 'right' },
           { type: 'localeDropdown', position: 'right' },
+          {
+            className: 'header-github-link',
+            'aria-label': 'GitHub repository',
+            href: 'https://github.com/ARterraCo/arterraco.github.io',
+            position: 'right',
+          },
         ],
       },
       footer: {
@@ -77,40 +72,25 @@ const config = {
           {
             title: 'Docs',
             items: [
-              {
-                label: 'Tutorial',
-                to: '/docs/intro',
-              },
+              { label: 'Tutorial', to: '/docs/intro' },
             ],
           },
           {
             title: 'Community',
             items: [
-              {
-                label: 'Discord',
-                href: 'https://discord.com/invite/xAD2cTsHZG',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/ARterraLabs',
-              },
+              { label: 'Discord', href: 'https://discord.com/invite/xAD2cTsHZG' },
+              { label: 'Twitter', href: 'https://twitter.com/ARterraLabs' },
             ],
           },
           {
             title: 'More',
             items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/ARterraCo/arterraco.github.io',
-              },
+              { label: 'Blog', to: '/blog' },
+              { label: 'GitHub', href: 'https://github.com/ARterraCo/arterraco.github.io' },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} ARterra Labs, Inc. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
