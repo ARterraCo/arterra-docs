@@ -25,6 +25,13 @@
   --ifm-color-primary-light: #29d5b0;
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
+  --ifm-background-color: #212121;
+  --ifm-background-surface-color: #303030;
+}
+
+html[data-theme='dark'] {
+  --ifm-background-color: #212121;
+  --ifm-background-surface-color: #303030;
 }
 
 .docusaurus-highlight-code-line {

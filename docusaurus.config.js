@@ -31,7 +31,7 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/ARterraCo/arterraco.github.io/tree/dev/',
           versions: {
-            current: { label: `v0.0.23-v0.0.19` },
+            current: { label: `v0.0.23-v0.0.20` },
           },
         },
         blog: {
