@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'ARterra Labs',
   tagline: 'ARterra Labs',
-  url: 'https://arterraco.github.io',
+  url: 'https://docs.arterra.co',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
