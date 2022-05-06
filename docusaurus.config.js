@@ -6,7 +6,7 @@ const lightCodeTheme = require('prism-react-renderer/themes/github');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'ARterra Labs',
+  title: 'ARterra Labs Docs',
   tagline: 'Start Collecting ESports and Gaming Digital Collectibles',
   url: 'https://docs.arterra.co',
   baseUrl: '/',

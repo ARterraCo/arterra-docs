@@ -11,7 +11,6 @@ export default function Home() {
 
   return (
     <Layout
-      title={siteConfig.title}
       description="Start Collecting ESports and Gaming Digital Collectibles">
 
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
