@@ -4,13 +4,17 @@
  */
 
 .heroBanner {
+  height: 500px;
   padding: 4rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
   background-color: #1a1d20;
   background-image: url("/img/arterra-banner.png");
-  background-size: 100% 100%;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: top right;
+  text-shadow: 2px 2px #1a1d20;
   color: #ffffff;
 }
 
@@ -24,4 +28,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-shadow: none;
 }
