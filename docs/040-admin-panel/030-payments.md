@@ -7,9 +7,7 @@ And _BP_ADMIN_ users can view NFTs that were minted by _CREATOR_ users assigned 
 Currently, there is no interactive elements to somehow perform any actions. This page leads information purposes only.
 
 :::info
-
-For more detailed information regarding Payment statuses visit [Payment flow](/docs/payment-flow) guide. 
-
+For more detailed information regarding Payment statuses visit [Payment flow](/docs/payment-flow) guide.
 :::
 
 Screenshot of Payments Admin Page:

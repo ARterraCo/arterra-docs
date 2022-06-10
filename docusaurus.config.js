@@ -34,10 +34,6 @@ const config = {
             current: { label: `v0.0.27-v0.0.24` },
           },
         },
-        blog: {
-          showReadingTime: true,
-          editUrl: 'https://github.com/ARterraCo/arterraco.github.io/tree/dev/',
-        },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -57,8 +53,7 @@ const config = {
         logo: { alt: 'ARterra Labs Logo', src: 'img/logo.png' },
         items: [
           // left
-          { label: 'Tutorial', type: 'doc', docId: 'intro', position: 'left' },
-          { to: '/blog', label: 'Example Blog', position: 'left' },
+          { label: 'Guide', type: 'doc', docId: 'intro', position: 'left' },
           // right
           { type: 'docsVersionDropdown', position: 'right' },
           { type: 'localeDropdown', position: 'right' },
@@ -89,7 +84,6 @@ const config = {
           {
             title: 'More',
             items: [
-              { label: 'Blog', to: '/blog' },
               { label: 'GitHub', href: 'https://github.com/ARterraCo/arterraco.github.io' },
             ],
           },
