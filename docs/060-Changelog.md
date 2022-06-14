@@ -3,6 +3,15 @@
 Platform version consists of two parts divided with dash (`{server_version}-{client_version}`): <br/>
 first part is API server version and the second one is web client application version.
 
+###  v0.0.28-v0.0.25 (14.06.2022)
+- **[UI/API]** 3D Models support
+- **[UI/API]** Marketing Mailchimp Emails for Platform _ADMIN_ users
+- **[API]** Fix NFT search by business partner
+- **[API]** Add profile info to OAuth2 token response
+- **[UI]** Fix refresh access token requests. Enable usage in multiple browser tabs 
+- **[UI/API]** Transactional email layout improvements (email verification, password reset, gift, purchase notifications)
+- **[UI/API]** Other bug fixes
+
 ###  v0.0.27-v0.0.24 (03.06.2022)
 - **[API]** Add possibility to hide Digital Collectible from Marketplace page via ENV config
 
