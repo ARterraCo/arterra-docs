@@ -1,5 +1,6 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import HttpRequestCodeExample from '@site/src/components/HttpRequestCodeExample';
 
 # OAuth2
 
@@ -112,22 +113,18 @@ which you can use for further requests to ARterra Labs API on behalf of the user
   For _Surf Planet_ example application it is `Buffer.from('client_475ed119:secret_a5ee033782be4636cbefc8').toString('base64')`
   &#8658; `Y2xpZW50XzQ3NWVkMTE5OnNlY3JldF9hNWVlMDMzNzgyYmU0NjM2Y2JlZmM4`.
 
-<Tabs>
-<TabItem value="request" label="Request">
-
-```shell
-curl -X 'POST' 'https://staging.arterra.co/api/auth/oauth2-token' \
-    -H 'Authorization: Basic Y2xpZW50XzQ3NWVkMTE5OnNlY3JldF9hNWVlMDMzNzgyYmU0NjM2Y2JlZmM4' \
-    -H 'Content-Type: application/json' \
+<HttpRequestCodeExample withIndent request={`
+curl -X 'POST' 'https://staging.arterra.co/api/auth/oauth2-token' \\
+    // highlight-next-line
+    -H 'Authorization: Basic Y2xpZW50XzQ3NWVkMTE5OnNlY3JldF9hNWVlMDMzNzgyYmU0NjM2Y2JlZmM4' \\
+    -H 'Content-Type: application/json' \\
     -d '{
+        // highlight-next-line
         "grant_type": "authorization_code",
+        // highlight-next-line
         "code": "94c781f33491b6cff6dca9447d85ddb9292f8d366a6e95509e61896c4740e4fc"
     }'
-```
-</TabItem>
-<TabItem value="response" label="Response">
-
-```json
+`} response={`
 {
     "access_token": "15b1043987d0edcc5f303e5ddbf2335976d495bb01e1732be3ccaa7937e36b9770568000a5c6cf3567f5ac5e4d012ebd01827080aacf0de2082566ee3fce8bda",
     "token_type": "bearer",
@@ -145,9 +142,7 @@ curl -X 'POST' 'https://staging.arterra.co/api/auth/oauth2-token' \
         "businessPartnerId": null
     }
 }
-```
-</TabItem>
-</Tabs>
+`}/>
 
 &nbsp;&nbsp;&nbsp;&nbsp; To refresh access token check [refresh token section](oauth2#refresh-access-token)
 
@@ -158,17 +153,10 @@ curl -X 'POST' 'https://staging.arterra.co/api/auth/oauth2-token' \
 
   E.g. to receive auth information and private user data call:
 
-<Tabs>
-<TabItem value="request2" label="Request">
-
-```shell
-curl -X 'GET' 'https://staging.arterra.co/api/auth/info' \
+<HttpRequestCodeExample withIndent request={`
+curl -X 'GET' 'https://staging.arterra.co/api/auth/info' \\
     -H 'Authorization: Bearer 15b1043987d0edcc5f303e5ddbf2335976d495bb01e1732be3ccaa7937e36b9770568000a5c6cf3567f5ac5e4d012ebd01827080aacf0de2082566ee3fce8bda'
-```
-</TabItem>
-<TabItem value="response2" label="Response">
-
-```json
+`} response={`
 {
     "code": "SUCCESS",
     "data": {
@@ -209,24 +197,36 @@ curl -X 'GET' 'https://staging.arterra.co/api/auth/info' \
         }
     }
 }
-```
-</TabItem>
-</Tabs>
+`}/>
 
 ### OAuth2 Sign Up (register)
-1. Check that business partner is created and has assigned root user (BP ADMIN)
-2. Authorize as BP ADMIN and copy client id and client secret for your application
-3. Go to OAuth2 register page (https://staging.arterra.co/oauth2-login?client_id=client_2ac52934&response_type=signup&redirect_uri=http://127.0.0.1:3002&state=some-state )
-    - `response_type` should be `signup` to open registration form
-    - use your `client_id`
-    - `redirect_uri` must match defined URL in BP settings
-    - pass any value in `state` query param to transfer through auth flow, e.g. user id or some security token to verify authorization integrity
-4. User registers on ARterra platform
-5. After successful registration, the user is redirected back to your platform. You can warn him to verify the email.
-6. User checks his email and verifies his email
-7. ARterra platform preserves verification state and redirects user to your application
-8. User has to sign in perform any actions
+To open sign up page for ARterra Labs OAuth2 we added unofficial query param `response_type=signup`
+instead of `response_type=code`.<br/>
+All other query params (`client_id`, `redirect_uri`, `state`) are left the same as for sign in flow.
 
+So the OAuth2 sign up page for ARterra Labs will look like:<br/>
+https://staging.arterra.co/oauth2-login?client_id=client_475ed119&response_type=signup&redirect_uri=http://127.0.0.1:3000/api/arterra/login-callback&state=some-state
+
+![OAuth2 Sign up](/img/docs/third-party-apps/oauth2-arterra-signup-page.png)
+
+:::tip
+We still advise using standard OAuth2 `response_type` query param equal to `code` because in case User has no account
+he can still click `Sign Up` button and proceed with registration.<br/>
+Also, you will not need to keep track about existence of ARterra Labs account for your users.
+
+![OAuth2 Sign up promt](/img/docs/third-party-apps/oauth2-arterra-login-signup-prompt.png)
+:::
+
+In case user had no ARterra Labs account and created a new one he can not sign in until his email got verified.
+
+Then there will be no `code` query param in the redirect to your application.<br/>
+When you receive `userId` query param that means that new ARterra Labs user was created
+but he needs to check his mailbox and finish email verification.<br/>
+For that case we recommend to show user a message to verify his email.
+
+![Email verification prompt](/img/docs/third-party-apps/email-verification-prompt.png)
+
+The link in his mailbox will also return him to your application from where he can retry sign in request.
 
 ### Example application
 We prepared several JS [examples](https://github.com/ARterraCo/arterra-oauth2-connect-example)
@@ -271,22 +271,17 @@ The difference between issuing new access token and refreshing is in `grant_type
 
 You still must pass `Authorization: Basic Base64({CLIENT_ID}:{CLIENT_SECRET})` header.
 
-<Tabs>
-<TabItem value="request" label="Request">
-
-```shell
-curl -X 'POST' 'https://staging.arterra.co/api/auth/oauth2-token' \
-    -H 'Authorization: Basic Y2xpZW50XzQ3NWVkMTE5OnNlY3JldF9hNWVlMDMzNzgyYmU0NjM2Y2JlZmM4' \
-    -H 'Content-Type: application/json' \
+<HttpRequestCodeExample request={`
+curl -X 'POST' 'https://staging.arterra.co/api/auth/oauth2-token' \\
+    -H 'Authorization: Basic Y2xpZW50XzQ3NWVkMTE5OnNlY3JldF9hNWVlMDMzNzgyYmU0NjM2Y2JlZmM4' \\
+    -H 'Content-Type: application/json' \\
     -d '{
+        // highlight-next-line
         "grant_type": "refresh_token",
+        // highlight-next-line
         "refresh_token": "5079fd9f6d979a7358b9bc84f74efe813f54d25ad90a39bfc7764acfe48456a33014318b7e3314cc384dbefae9a9ecd7a86f1f648a5f693ab0a477089d527f38"
     }'
-```
-</TabItem>
-<TabItem value="response" label="Response">
-
-```json
+`} response={`
 {
   "access_token": "d2740fe47603f4ae6472130625edbc677eab5785ff04429b7448a4a9ef250dad337d8b16d0c1309ec19a9151744555bace286eeb44d1780b7c81847efdba9cac",
   "token_type": "bearer",
@@ -304,6 +299,4 @@ curl -X 'POST' 'https://staging.arterra.co/api/auth/oauth2-token' \
     "businessPartnerId": null
   }
 }
-```
-</TabItem>
-</Tabs>
+`}/>
