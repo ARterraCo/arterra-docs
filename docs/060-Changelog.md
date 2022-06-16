@@ -7,7 +7,7 @@ first part is API server version and the second one is web client application ve
 - **[UI/API]** 3D Models support
 - **[UI/API]** Marketing Mailchimp Emails for Platform _ADMIN_ users
 - **[API]** Fix NFT search by business partner
-- **[API]** Add profile info to OAuth2 token response
+- **[API]** Add profile info to OAuth2 access token response
 - **[UI]** Fix refresh access token requests. Enable usage in multiple browser tabs 
 - **[UI/API]** Transactional email layout improvements (email verification, password reset, gift, purchase notifications)
 - **[UI/API]** Other bug fixes

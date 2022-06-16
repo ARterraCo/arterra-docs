@@ -1,0 +1,309 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# OAuth2
+
+ARterra Labs API provides OAuth 2.0 compatible authentication workflow.
+
+OAuth 2.0, is a standard designed to allow applications to access resources hosted by other web apps on behalf of a user.
+OAuth 2.0 provides consented access and restricts actions of what the client app can perform on resources on behalf of the user,
+without ever sharing the user's credentials.
+
+:::info
+Comprehensive information about OAuth 2.0 can be found [here](https://auth0.com/intro-to-iam/what-is-oauth-2/).
+
+For detailed description you can check [RFC 6749](https://datatracker.ietf.org/doc/html/rfc6749) standard.
+:::
+
+Because ARterra Labs API follows RFC it is possible to use any compatible libraries for your programming language, e.g.:
+- [Node passport-oauth2](http://www.passportjs.org/packages/passport-oauth2/)
+- [JavaScript](https://oauth.net/code/javascript/)
+- [NodeJS](https://oauth.net/code/nodejs/)
+- [PHP](https://oauth.net/code/php/)
+- [Java](https://oauth.net/code/java/)
+
+ARterra Labs OAuth2 implementation includes these grant types:
+- `authorization_code` - The ARterra Labs API returns a single-use Authorization Code to the 3rd party application,
+which is then exchanged for an Access Token.<br/>
+This is the best option for traditional web apps where the exchange can securely happen on the server side.
+- `password` - This grant requires the 3rd party app first to acquire the user’s credentials, which are passed to the ARterra Labs server.<br/>
+Because users may be afraid of providing their login info (ARterra Labs email/password) on your website domain
+it is advised to use `authorization_code` grant type with redirects to ARterra Labs login page. 
+- `refresh_token` - exchange of a Refresh Token for a new Access Token without asking a user to authenticate.
+
+:::note
+ARterra Labs API has no `scope` related restrictions so receiving `access_token` using OAuth2 flow means that
+3rd party application gains full control and can perform any action this user has permission. 
+:::
+
+## OAuth2 connect flow
+
+:::caution
+Before connecting 3rd party application to ARterra Labs API you must have created Business Partner and user with _BP_ADMIN_ access.
+
+How to configure Business Partner and assign _BP_ADMIN_ user is described in [Business Partner](business-partner) section
+
+![BP w/o credentials](/img/docs/third-party-apps/bp-wo-credentials.png)
+:::
+
+Authorize as _BP_ADMIN_ user and create client credentials for your future application.
+![BP create credentials](/img/docs/third-party-apps/bp-create-credentials.png)
+
+Client credentials for specified redirect URI should appear in the section below.<br/>
+Client ID and Client Secret are generated automatically by the system.<br/>
+Client Secret is visible only to _BP_ADMIN_ user, even Platform _ADMIN_ has no access to it.
+
+You can create up to 8 different client credentials.
+![BP create credentials](/img/docs/third-party-apps/bp-with-credentials.png)
+
+Now, when you have created client credentials, you can integrate your application (OAuth2 Client) with ARterra Labs API.<br/>
+Further you can find instructions which will help you to guide your user through OAuth2 [sign-in](oauth2#oauth2-sign-up-register)
+or [sign-up](oauth2#oauth2-sign-up-register) and [example application](oauth2#example-application) with integrations. 
+
+### OAuth2 Sign In (login)
+This flow is described in details in [RFC 6749](https://datatracker.ietf.org/doc/html/rfc6749) standard.
+
+In general, you need to:
+1. **Redirect your User to ARterra Labs login page.**
+
+  Sandbox ARterra Labs auth page for OAuth2 flow is https://staging.arterra.co/oauth2-login.<br/>
+  For live env - https://app.arterra.co/oauth2-login.<br/>
+  :::note
+  If OAuth2 link is configured incorrectly user will be redirected to main ARterra Labs page.
+  :::
+
+  According to RFC 6749 the OAuth2 link must have these query params:
+    - `client_id` - _required_, your Client ID
+    - `response_type` - _required_, to open login page it should be equal to `code`
+    - `redirect_uri` - _required_, the Redirect URI to return your users back from ARterra Labs auth page.<br/>
+      The value must match your application URI registered in Client Credential section of Business Partner Admin page.
+    - `state` - _optional_, pass any value to transfer through auth flow,
+       e.g. user id or some security token to verify authorization integrity
+
+  E.g. OAuth2 sign in link for the example application _Surf Planet_ that was configured earlier in screenshots will look this way:<br/>
+  https://staging.arterra.co/oauth2-login?client_id=client_475ed119&response_type=code&redirect_uri=http://127.0.0.1:3000/api/arterra/login-callback&state=some-state
+  ![OAuth2 Sign in](/img/docs/third-party-apps/oauth2-arterra-login-page.png)
+
+2. **User signs-in.**
+   
+  The user provides his credentials and signs-in to the ARterra Labs Platform.
+
+3. **ARterra Labs redirects user back to redirect URI you provided with authorization code in query param.**
+
+   After successful authentication user is redirected to your application link that you specified in the Redirect URI.
+
+   The link will have these query params:
+     - `code` - _required_, the authorization code that you can exchange to access token.<br/>
+     This code is valid for one time use during 3 minute.
+     - `state` - _optional_, keeps value passed during redirect to ARterra Labs auth page
+
+   :::caution
+   It might be that user had no account on ARterra Labs Platform and just have created a new one.
+   In that case redirect URI to your application will be different.<br/>
+   For details how to handle new ARterra Labs users check [next section](oauth2#oauth2-sign-up-register)
+   :::
+
+4. **Your application exchanges authorization code to access token
+which you can use for further requests to ARterra Labs API on behalf of the user.**
+
+  ARterra Labs API endpoint to receive access token: https://staging.arterra.co/api/api/#/auth/AuthController_issueAccessToken <br/>
+  It is important to pass `Authorization: Basic Base64({CLIENT_ID}:{CLIENT_SECRET})` header
+  with Base64 encoded string of your Client ID and Client Secret.<br/>
+  For _Surf Planet_ example application it is `Buffer.from('client_475ed119:secret_a5ee033782be4636cbefc8').toString('base64')`
+  &#8658; `Y2xpZW50XzQ3NWVkMTE5OnNlY3JldF9hNWVlMDMzNzgyYmU0NjM2Y2JlZmM4`.
+
+<Tabs>
+<TabItem value="request" label="Request">
+
+```shell
+curl -X 'POST' 'https://staging.arterra.co/api/auth/oauth2-token' \
+    -H 'Authorization: Basic Y2xpZW50XzQ3NWVkMTE5OnNlY3JldF9hNWVlMDMzNzgyYmU0NjM2Y2JlZmM4' \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "grant_type": "authorization_code",
+        "code": "94c781f33491b6cff6dca9447d85ddb9292f8d366a6e95509e61896c4740e4fc"
+    }'
+```
+</TabItem>
+<TabItem value="response" label="Response">
+
+```json
+{
+    "access_token": "15b1043987d0edcc5f303e5ddbf2335976d495bb01e1732be3ccaa7937e36b9770568000a5c6cf3567f5ac5e4d012ebd01827080aacf0de2082566ee3fce8bda",
+    "token_type": "bearer",
+    "expires_in": 172800,
+    "refresh_token": "5079fd9f6d979a7358b9bc84f74efe813f54d25ad90a39bfc7764acfe48456a33014318b7e3314cc384dbefae9a9ecd7a86f1f648a5f693ab0a477089d527f38",
+    "refresh_token_expires_in": 604800,
+    "profile": {
+        "id": "33167f87-6192-435e-aa5b-3cab4b7465df",
+        "username": "ykuznets66",
+        "wallet": "ykuznets66.testnet",
+        "role": "ADMIN",
+        "avatarUrl": "https://s3.amazonaws.com/arterra-stage-avatar/user/a7cc76ec17b44c8e82474f4f9d32bb5175ef255eb8c392de2bf53c589b10f3af.webp",
+        "fullName": "ADMIN",
+        "bio": "",
+        "businessPartnerId": null
+    }
+}
+```
+</TabItem>
+</Tabs>
+
+&nbsp;&nbsp;&nbsp;&nbsp; To refresh access token check [refresh token section](oauth2#refresh-access-token)
+
+5. **Perform any action on behalf of the user using ARterra Labs API**
+
+  With received access token you can perform requests to [ARterra Labs API](https://staging.arterra.co/api/api/).<br/>
+  Access token should be passed in `Authorization: Bearer {ACCESS_TOKEN}` header.
+
+  E.g. to receive auth information and private user data call:
+
+<Tabs>
+<TabItem value="request2" label="Request">
+
+```shell
+curl -X 'GET' 'https://staging.arterra.co/api/auth/info' \
+    -H 'Authorization: Bearer 15b1043987d0edcc5f303e5ddbf2335976d495bb01e1732be3ccaa7937e36b9770568000a5c6cf3567f5ac5e4d012ebd01827080aacf0de2082566ee3fce8bda'
+```
+</TabItem>
+<TabItem value="response2" label="Response">
+
+```json
+{
+    "code": "SUCCESS",
+    "data": {
+        "accessToken": "15b1043987d0edcc5f303e5ddbf2335976d495bb01e1732be3ccaa7937e36b9770568000a5c6cf3567f5ac5e4d012ebd01827080aacf0de2082566ee3fce8bda",
+        "accessTokenExpiresAt": "2022-06-18T05:02:45.142Z",
+        "refreshToken": "5079fd9f6d979a7358b9bc84f74efe813f54d25ad90a39bfc7764acfe48456a33014318b7e3314cc384dbefae9a9ecd7a86f1f648a5f693ab0a477089d527f38",
+        "refreshTokenExpiresAt": "2022-06-23T05:02:45.142Z",
+        "client": {
+            "id": "client_475ed119",
+            "redirectUris": "http://127.0.0.1:3000/api/arterra/login-callback",
+            "grants": ["password", "refresh_token", "authorization_code"],
+            "accessTokenLifetime": 172800,
+            "refreshTokenLifetime": 604800,
+            "authorizationCodeLifetime": 180
+        },
+        "user": {
+            "id": "33167f87-6192-435e-aa5b-3cab4b7465df",
+            "createdAt": "2021-11-15T14:36:42.014Z",
+            "updatedAt": "2022-06-14T08:12:41.865Z",
+            "email": "arterratest@arterra.co",
+            "username": "ykuznets66",
+            "wallet": "ykuznets66.testnet",
+            "status": "ACTIVE",
+            "role": "ADMIN",
+            "isEmailVerified": true,
+            "avatarUrl": "https://s3.amazonaws.com/arterra-stage-avatar/user/a7cc76ec17b44c8e82474f4f9d32bb5175ef255eb8c392de2bf53c589b10f3af.webp",
+            "fullName": "ADMIN",
+            "bio": "",
+            "businessPartnerId": null,
+            "stripeAccount": {
+                "id": "acct_1K05p3QsRIUvGOcr",
+                "userId": "33167f87-6192-435e-aa5b-3cab4b7465df",
+                "status": "ACTIVE",
+                "expiryDate": "1970-01-19T23:42:10.815Z",
+                "createdAt": "2021-11-26T14:54:47.696Z",
+                "updatedAt": "2022-06-14T08:13:54.808Z"
+            }
+        }
+    }
+}
+```
+</TabItem>
+</Tabs>
+
+### OAuth2 Sign Up (register)
+1. Check that business partner is created and has assigned root user (BP ADMIN)
+2. Authorize as BP ADMIN and copy client id and client secret for your application
+3. Go to OAuth2 register page (https://staging.arterra.co/oauth2-login?client_id=client_2ac52934&response_type=signup&redirect_uri=http://127.0.0.1:3002&state=some-state )
+    - `response_type` should be `signup` to open registration form
+    - use your `client_id`
+    - `redirect_uri` must match defined URL in BP settings
+    - pass any value in `state` query param to transfer through auth flow, e.g. user id or some security token to verify authorization integrity
+4. User registers on ARterra platform
+5. After successful registration, the user is redirected back to your platform. You can warn him to verify the email.
+6. User checks his email and verifies his email
+7. ARterra platform preserves verification state and redirects user to your application
+8. User has to sign in perform any actions
+
+
+### Example application
+We prepared several JS [examples](https://github.com/ARterraCo/arterra-oauth2-connect-example)
+on how to integrate ARterra Labs OAuth2 flow to your application.
+
+- API requests performed with axios without any auth libraries: `src/app-raw-axios-auth.js`
+- passport with passport-oauth2 express middlewares: `src/app-passport-oauth2-auth.js`
+
+These examples will show you how to receive `access_token` and use it to fetch private user information and Collectibles.
+
+```shell
+# clone git repo
+git clone https://github.com/ARterraCo/arterra-oauth2-connect-example.git
+cd arterra-oauth2-connect-example
+
+# install dependencies
+npm install
+
+# Start application
+node src/app-raw-axios-auth.js
+# or
+npm start
+```
+
+Open http://127.0.0.1:3000 to test in browser.
+
+![Example app](/img/docs/third-party-apps/example-app-initial-page.png)
+
+Optionally, you can provide your own Business Partner client credentials:
+```shell
+vi src/config.js
+```
+
+For detailed information how to configure example application
+check project [README](https://github.com/ARterraCo/arterra-oauth2-connect-example) file.
+
+### Refresh access token
+
+ARterra Labs API endpoint to refresh access token is the same as for receiving access token:
+https://staging.arterra.co/api/api/#/auth/AuthController_issueAccessToken.<br/>
+The difference between issuing new access token and refreshing is in `grant_type`.<br/> 
+
+You still must pass `Authorization: Basic Base64({CLIENT_ID}:{CLIENT_SECRET})` header.
+
+<Tabs>
+<TabItem value="request" label="Request">
+
+```shell
+curl -X 'POST' 'https://staging.arterra.co/api/auth/oauth2-token' \
+    -H 'Authorization: Basic Y2xpZW50XzQ3NWVkMTE5OnNlY3JldF9hNWVlMDMzNzgyYmU0NjM2Y2JlZmM4' \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "grant_type": "refresh_token",
+        "refresh_token": "5079fd9f6d979a7358b9bc84f74efe813f54d25ad90a39bfc7764acfe48456a33014318b7e3314cc384dbefae9a9ecd7a86f1f648a5f693ab0a477089d527f38"
+    }'
+```
+</TabItem>
+<TabItem value="response" label="Response">
+
+```json
+{
+  "access_token": "d2740fe47603f4ae6472130625edbc677eab5785ff04429b7448a4a9ef250dad337d8b16d0c1309ec19a9151744555bace286eeb44d1780b7c81847efdba9cac",
+  "token_type": "bearer",
+  "expires_in": 172800,
+  "refresh_token": "08b9965a5c0c404454f58e3287d37ae13b90cabf6e4aa225f6cb2f6ec691a5aaf361055dc21f7ac1148dbb4475b41559b88be4532dad87b1fcc7c7ad553cd1c5",
+  "refresh_token_expires_in": 604800,
+  "profile": {
+    "id": "33167f87-6192-435e-aa5b-3cab4b7465df",
+    "username": "ykuznets66",
+    "wallet": "ykuznets66.testnet",
+    "role": "ADMIN",
+    "avatarUrl": "https://s3.amazonaws.com/arterra-stage-avatar/user/a7cc76ec17b44c8e82474f4f9d32bb5175ef255eb8c392de2bf53c589b10f3af.webp",
+    "fullName": "ADMIN",
+    "bio": "",
+    "businessPartnerId": null
+  }
+}
+```
+</TabItem>
+</Tabs>
