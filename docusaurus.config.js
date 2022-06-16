@@ -53,7 +53,7 @@ const config = {
         logo: { alt: 'ARterra Labs Logo', src: 'img/logo.png' },
         items: [
           // left
-          { label: 'Guide', type: 'doc', docId: 'intro', position: 'left' },
+          { label: 'Documentation', type: 'doc', docId: 'intro', position: 'left' },
           // right
           { type: 'docsVersionDropdown', position: 'right' },
           { type: 'localeDropdown', position: 'right' },
@@ -71,7 +71,8 @@ const config = {
           {
             title: 'Docs',
             items: [
-              { label: 'Tutorial', to: '/docs/intro' },
+              { label: 'Intro', to: '/docs/intro' },
+              { label: 'OAuth2', to: '/docs/third-party-apps/oauth2' },
             ],
           },
           {
