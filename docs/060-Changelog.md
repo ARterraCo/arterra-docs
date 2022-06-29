@@ -3,6 +3,13 @@
 Platform version consists of two parts divided with dash (`{server_version}-{client_version}`): <br/>
 first part is API server version and the second one is web client application version.
 
+###  v0.0.29-v0.0.26 (29.06.2022)
+- **[UI/API]** Protect airdrop claiming with security token
+- **[UI/API]** Enhance Admin Panel Users page with filters and sorting
+- **[UI/API]** Add IPFS image storing (currently with Pinata only, own IPFS node will be set up later)
+- **[UI/API]** Added Get list button to fetch csv file with all user emails for Admin Panel
+- **[UI]** OAuth2 Sign in Page restyle and add Business partner links and description
+
 ###  v0.0.28-v0.0.25 (14.06.2022)
 - **[UI/API]** 3D Models support
 - **[UI/API]** Marketing Mailchimp Emails for Platform _ADMIN_ users
