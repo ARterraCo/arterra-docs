@@ -2,6 +2,10 @@
 
 Platform version consists of two parts divided with dash (`{server_version}-{client_version}`): <br/>
 first part is API server version and the second one is web client application version.
+### v0.0.30-v0.0.27 (12.07.2022)
+- **[UI/API]** Show more information on user profile
+- **[UI/API]** Security tab on profile and 2fa email verification
+- **[API]** Handle payouts for seller onboarded from different counties(Japan, South Korea, UAE, etc)
 
 ###  v0.0.29-v0.0.26 (29.06.2022)
 - **[UI/API]** Protect airdrop claiming with security token
