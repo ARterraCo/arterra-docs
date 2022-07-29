@@ -2,6 +2,12 @@
 
 Platform version consists of two parts divided with dash (`{server_version}-{client_version}`): <br/>
 first part is API server version and the second one is web client application version.
+### v.0.0.31-v.0.0.28 (29.07.2022)
+- **[UI/API]** 2 factor authentication (2FA) SMS
+- **[UI/API]** NFT airdrop setting claim end date
+- **[UI/API]** Show blockchain transaction info in NFT history section
+- **[API]** Set up IPFS Node and configure IPFS Gateway
+
 ### v0.0.30-v0.0.27 (12.07.2022)
 - **[UI/API]** Show more information on user profile
 - **[UI/API]** Security tab on profile and 2fa email verification
